@@ -22,12 +22,9 @@ pipeline {
 
         stage('OWASP Dependency-Check') {
             steps {
-                script {
-                    dependencyCheck(
-                        additionalArguments: '--project "Employee Management System" --scan . --format HTML --format XML --out dependency-check-report',
-                        installationName: 'OWASP-Dependency-Check'
-                    )
-                }
+                dependencyCheck(
+                    additionalArguments: '--project "Employee Management System" --scan . --format HTML --format XML --out dependency-check-report'
+                )
             }
         }
 
