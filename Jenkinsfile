@@ -26,6 +26,23 @@ pipeline {
             }
         }
 
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    def scannerHome = tool 'SonarQube-Scanner'
+
+                    withSonarQubeEnv('SonarQube') {
+                        sh """
+                            ${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.projectKey=Employee-Management-System \
+                            -Dsonar.projectName="Employee Management System" \
+                            -Dsonar.sources=src
+                        """
+                    }
+                }
+            }
+        }
+
         stage('Docker Build') {
             steps {
                 sh 'docker build -t ${IMAGE_NAME} .'
