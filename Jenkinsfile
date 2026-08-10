@@ -20,6 +20,30 @@ pipeline {
             }
         }
 
+        stage('OWASP Dependency-Check') {
+            steps {
+                script {
+                    dependencyCheck(
+                        additionalArguments: '--project "Employee Management System" --scan . --format HTML --format XML --out dependency-check-report',
+                        installationName: 'OWASP-Dependency-Check'
+                    )
+                }
+            }
+        }
+
+        stage('Publish OWASP Report') {
+            steps {
+                publishHTML([
+                    allowMissing: true,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: true,
+                    reportDir: 'dependency-check-report',
+                    reportFiles: 'dependency-check-report.html',
+                    reportName: 'OWASP Dependency-Check Report'
+                ])
+            }
+        }
+
         stage('Build Application') {
             steps {
                 sh 'pnpm build'
@@ -70,16 +94,16 @@ pipeline {
     }
 
     post {
+        always {
+            sh 'docker ps -a'
+        }
+
         success {
             echo 'Dev/Test pipeline completed successfully.'
         }
 
         failure {
             echo 'Dev/Test pipeline failed.'
-        }
-
-        always {
-            sh 'docker ps -a'
         }
     }
 }
