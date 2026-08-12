@@ -17,6 +17,8 @@ pipeline {
 
         stage('OWASP Dependency-Check') {
             steps {
+                sh 'mkdir -p dependency-check-report'
+
                 dependencyCheck(
                     odcInstallation: 'OWASP-Dependency-Check',
                     additionalArguments: '--project "Employee Management System" --scan . --format HTML --format XML --out dependency-check-report'
