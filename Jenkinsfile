@@ -19,10 +19,17 @@ pipeline {
             steps {
                 sh 'mkdir -p dependency-check-report'
 
-                dependencyCheck(
-                    odcInstallation: 'OWASP-Dependency-Check',
-                    additionalArguments: '--project "Employee Management System" --scan . --format HTML --format XML --out dependency-check-report'
-                )
+                withCredentials([
+                    string(
+                        credentialsId: 'nvd-api-key',
+                        variable: 'NVD_API_KEY'
+                    )
+                ]) {
+                    dependencyCheck(
+                        odcInstallation: 'OWASP-Dependency-Check',
+                        additionalArguments: '--project "Employee Management System" --scan . --format HTML --format XML --out dependency-check-report --nvdApiKey ' + env.NVD_API_KEY
+                    )
+                }
             }
         }
 
