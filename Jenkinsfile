@@ -23,6 +23,7 @@ pipeline {
         stage('OWASP Dependency-Check') {
             steps {
                 dependencyCheck(
+                    odcInstallation: 'OWASP-Dependency-Check',
                     additionalArguments: '--project "Employee Management System" --scan . --format HTML --format XML --out dependency-check-report'
                 )
             }
